@@ -1,0 +1,18 @@
+# Dev environment for GitHub Codespaces or VS Code Dev Containers:
+# a Java 21 workspace plus a HAPI FHIR server the gateway delivers to.
+services:
+  dev:
+    image: mcr.microsoft.com/devcontainers/java:1-21-bookworm
+    volumes:
+      - ..:/workspace:cached
+    command: sleep infinity
+    environment:
+      # Spring relaxed binding for gateway.fhir-base-url
+      GATEWAY_FHIRBASEURL: http://fhir:8080/fhir
+      FHIR_URL: http://fhir:8080/fhir
+    depends_on:
+      - fhir
+  fhir:
+    image: hapiproject/hapi:v7.4.0
+    ports:
+      - "8090:8080"

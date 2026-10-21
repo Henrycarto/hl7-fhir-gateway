@@ -1,5 +1,8 @@
 # hl7-fhir-gateway
 
+[![ci](https://github.com/Henrycarto/hl7-fhir-gateway/actions/workflows/ci.yml/badge.svg)](https://github.com/Henrycarto/hl7-fhir-gateway/actions/workflows/ci.yml)
+[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/Henrycarto/hl7-fhir-gateway)
+
 A Spring Boot service that receives HL7 v2 messages from hospital systems and writes them to a FHIR R4 server.
 
 Hospitals still run on HL7 v2. Admissions, discharges and lab results travel between systems as pipe-delimited messages over MLLP. New applications want FHIR. This gateway sits between the two worlds and is built around the failure modes that matter in production:
@@ -8,6 +11,8 @@ Hospitals still run on HL7 v2. Admissions, discharges and lab results travel bet
 - **The FHIR server goes down.** The sender should still get a fast ACK, and nothing may be lost while the server is unavailable.
 - **Order matters.** A discharge applied before its admission leaves the encounter in the wrong state.
 - **Some messages are simply wrong.** They need a clear rejection and a place where an engineer can see and replay them.
+
+![Demo: admit, lab result, resend, discharge](docs/demo.gif)
 
 ## What it handles
 
@@ -50,6 +55,16 @@ Messages v2.3 to v2.5.1 are read into the v2.5 model. Anything else gets an `AR`
 
 A message answered with `AE` is not recorded, so the sender can fix the data and resend with the same control id.
 
+## Try it in your browser
+
+Nothing to install:
+
+1. Click **Open in GitHub Codespaces** above and wait for the build. The Codespace comes with Java 21, Maven and a HAPI FHIR server.
+2. Start the gateway: `mvn spring-boot:run`
+3. In a second terminal, run the demo: `./scripts/demo.sh`
+
+The demo walks through an admission, a lab result, a resend, a rejected message and a discharge, then shows what the FHIR server holds. The integration test needs Docker and runs in CI, not in the Codespace.
+
 ## Run it
 
 Requirements: Java 21, Maven, Docker (for the local FHIR server).
@@ -57,6 +72,12 @@ Requirements: Java 21, Maven, Docker (for the local FHIR server).
 ```bash
 docker compose up -d          # HAPI FHIR JPA server on http://localhost:8090/fhir
 mvn spring-boot:run           # gateway: HTTP on :8080, MLLP on :2575
+```
+
+The quickest way to see everything is the demo script, in a second terminal:
+
+```bash
+./scripts/demo.sh
 ```
 
 Send a message over HTTP:

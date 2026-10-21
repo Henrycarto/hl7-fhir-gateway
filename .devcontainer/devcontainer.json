@@ -1,0 +1,25 @@
+{
+  "name": "hl7-fhir-gateway",
+  "dockerComposeFile": "docker-compose.yml",
+  "service": "dev",
+  "workspaceFolder": "/workspace",
+  "features": {
+    "ghcr.io/devcontainers/features/java:1": {
+      "version": "none",
+      "installMaven": "true"
+    }
+  },
+  "forwardPorts": [8080, 8090, 2575],
+  "portsAttributes": {
+    "8080": { "label": "Gateway HTTP" },
+    "8090": { "label": "HAPI FHIR" },
+    "2575": { "label": "MLLP" }
+  },
+  "postCreateCommand": "mvn -B -q -DskipTests package",
+  "postAttachCommand": "echo 'Run the gateway: mvn spring-boot:run   Then in a second terminal: ./scripts/demo.sh'",
+  "customizations": {
+    "vscode": {
+      "extensions": ["vscjava.vscode-java-pack", "vmware.vscode-spring-boot"]
+    }
+  }
+}
