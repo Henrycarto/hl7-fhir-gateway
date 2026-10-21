@@ -1,0 +1,50 @@
+spring:
+  application:
+    name: hl7-fhir-gateway
+  datasource:
+    url: jdbc:h2:file:./data/gateway;AUTO_SERVER=TRUE
+    username: sa
+    password: ""
+  jpa:
+    hibernate:
+      ddl-auto: update
+    open-in-view: false
+
+server:
+  port: 8080
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+
+gateway:
+  # FHIR R4 server that receives the transaction bundles
+  fhir-base-url: http://localhost:8090/fhir
+  # Identifier systems written into FHIR. Replace with the hospital's own systems.
+  mrn-system: https://example.org/fhir/sid/mrn
+  visit-system: https://example.org/fhir/sid/visit
+  observation-system: https://example.org/fhir/sid/hl7v2-observation
+  local-code-system: https://example.org/fhir/CodeSystem/local-lab
+  # HL7 v2 timestamps without an offset are read in this zone
+  default-timezone: Europe/Vienna
+  mllp:
+    enabled: true
+    port: 2575
+  delivery:
+    poll-interval-ms: 5000
+    initial-backoff-seconds: 5
+    max-backoff-seconds: 600
+    max-attempts: 12
+    request-timeout-ms: 15000
+
+---
+spring:
+  config:
+    activate:
+      on-profile: postgres
+  datasource:
+    url: ${DATABASE_URL:jdbc:postgresql://localhost:5432/gateway}
+    username: ${DATABASE_USER:gateway}
+    password: ${DATABASE_PASSWORD:}

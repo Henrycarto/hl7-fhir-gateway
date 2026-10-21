@@ -1,0 +1,17 @@
+spring:
+  datasource:
+    url: jdbc:h2:mem:gateway-test;DB_CLOSE_DELAY=-1
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+
+gateway:
+  fhir-base-url: http://localhost:1/fhir
+  mllp:
+    enabled: false
+  delivery:
+    # Tests drive the worker by calling runOnce(); keep the scheduler out of the way.
+    poll-interval-ms: 3600000
+    initial-backoff-seconds: 5
+    max-backoff-seconds: 600
+    max-attempts: 3
