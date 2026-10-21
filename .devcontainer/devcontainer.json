@@ -7,9 +7,6 @@
     "ghcr.io/devcontainers/features/java:1": {
       "version": "none",
       "installMaven": "true"
-    },
-    "ghcr.io/devcontainers/features/sshd:1": {
-      "version": "latest"
     }
   },
   "forwardPorts": [8080, 8090, 2575],

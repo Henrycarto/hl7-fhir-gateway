@@ -2,9 +2,7 @@
 # a Java 21 workspace plus a HAPI FHIR server the gateway delivers to.
 services:
   dev:
-    build:
-      context: .
-      dockerfile: Dockerfile
+    image: mcr.microsoft.com/devcontainers/java:1-21-bookworm
     volumes:
       - ..:/workspace:cached
     command: sleep infinity
