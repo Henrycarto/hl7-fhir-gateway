@@ -7,3 +7,6 @@ data/
 .DS_Store
 .env
 id_file
+
+# Private interview notes
+INTERVIEW_NOTES.md
